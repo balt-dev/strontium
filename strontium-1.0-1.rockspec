@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 package = "strontium"
-version = "1.0-0"
+version = "1.0-1"
 source = {
    url = "git://github.com/balt-dev/strontium",
 }
@@ -17,7 +17,7 @@ Licensed under the MIT license.
 See https://github.com/balt-dev/strontium.
 
 See the documentation here:
-https://github.com/balt-dev/strontium/tree/v1.0.0/doc/index.md
+https://github.com/balt-dev/strontium/tree/v1.0.1/doc/index.md
    ]]
 }
 dependencies = {

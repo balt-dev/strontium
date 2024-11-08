@@ -1,5 +1,7 @@
 --[[
 
+Version 1.0-1
+
 Dead simple, one file parsing library for Lua.
 Made by @baltdev. Copyright 2024.
 Licensed under the MIT license.
@@ -12,7 +14,6 @@ Feel free to copy this file around as much as you want,
 as long as this comment at the top stays untouched.
 
 ]]
-
 
 -- shim
 ---@diagnostic disable: deprecated
@@ -34,8 +35,12 @@ local T = {}
 T.Spacer = { __metatable = false }
 setmetatable(T.Spacer, {
     __metatable = false,
-    __index = { def = function(_, i) return i end },
-    __newindex = function() error("cannot set fields on Spacer", 2) end
+    __index = function (t, k)
+        if k == "def" then return function(_, i) return i, T.Spacer end end
+        return T.Rule[k]
+    end,
+    __newindex = function() error("cannot set fields on Spacer", 2) end,
+    __tostring = function () return "{strontium.Spacer}" end
 })
 
 --- @class Error
@@ -382,8 +387,8 @@ setmetatable(T.Forward, {
 --- @param literal string The string to match
 --- Matches a literal string.
 function T.Literal(literal)
-    if literal == nil then error("!") end
-    return T.Rule.new(function(source, index)        
+    return T.Rule.new(function(source, index)
+        if #literal == 0 then return index, "" end    
         if source:sub(index, index + #literal - 1) == literal then
             return index + #literal, literal
         end
