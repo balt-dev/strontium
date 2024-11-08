@@ -1,6 +1,6 @@
 --[[
 
-Version 1.0-1
+Version 1.1-0
 
 Dead simple, one file parsing library for Lua.
 Made by @baltdev. Copyright 2024.

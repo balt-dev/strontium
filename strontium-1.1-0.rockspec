@@ -17,7 +17,7 @@ Licensed under the MIT license.
 See https://github.com/balt-dev/strontium.
 
 See the documentation here:
-https://github.com/balt-dev/strontium/tree/v1.0.2/doc/index.md
+https://github.com/balt-dev/strontium/tree/v1.1.0/doc/index.md
    ]]
 }
 dependencies = {
