@@ -14,7 +14,7 @@ local l = strontium.Literal
 local p = strontium.Pattern
 
 -- Forward declaration
-local sum = strontium.Forward.new()
+local sum = strontium.Rule.new()
 
 -- This returns nothing, as the pattern doesn't capture anything
 local ws = p'[\t\r\n ]*'
@@ -55,7 +55,7 @@ local prod = (unary .. ((ws + p'([%*/%%])' - ws) .. unary):group():many())
     end)
 
 -- Complete forward declaration
-sum.definition = (prod .. ((ws + p'([+-])' - ws) .. prod):group():many())
+sum.def = (prod .. ((ws + p'([+-])' - ws) .. prod):group():many())
     :map(function(init, operations)
         for _, pair in ipairs(operations) do
             local opr, val = table.unpack(pair)
@@ -66,8 +66,11 @@ sum.definition = (prod .. ((ws + p'([+-])' - ws) .. prod):group():many())
             end
         end
         return init
-    end)
+    end).def
 
 -- Full file
 local expr = sum .. p"$":err("expected EOF")
+
+print(expr:parse "1 * 7 + ((((1 + (((3) + 3)) / 3))) / 2) / 4 + 1 * 2 + 3 * 4" )
+--> 60      21.375
 ```

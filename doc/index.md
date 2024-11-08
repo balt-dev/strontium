@@ -12,7 +12,6 @@
   - [Spacer](#spacer)
   - [Literal](#literal)
   - [Pattern](#pattern)
-  - [Forward](#forward)
 
 # Overview
 
@@ -28,7 +27,7 @@ local l = strontium.Literal
 local p = strontium.Pattern
 
 -- Forward declaration
-local sum = strontium.Forward.new()
+local sum = strontium.Rule.new()
 
 -- This returns nothing, as the pattern doesn't capture anything
 local ws = p'[\t\r\n ]*'
@@ -69,7 +68,7 @@ local prod = (unary .. ((ws + p'([%*/%%])' - ws) .. unary):group():many())
     end)
 
 -- Complete forward declaration
-sum.definition = (prod .. ((ws + p'([+-])' - ws) .. prod):group():many())
+sum.def = (prod .. ((ws + p'([+-])' - ws) .. prod):group():many())
     :map(function(init, operations)
         for _, pair in ipairs(operations) do
             local opr, val = table.unpack(pair)
@@ -80,10 +79,13 @@ sum.definition = (prod .. ((ws + p'([+-])' - ws) .. prod):group():many())
             end
         end
         return init
-    end)
+    end).def
 
 -- Full file
 local expr = sum .. p"$":err("expected EOF")
+
+print(expr:parse "1 * 7 + ((((1 + (((3) + 3)) / 3))) / 2) / 4 + 1 * 2 + 3 * 4" )
+--> 60      21.375
 ```
 Everything done here is explained below.
 
@@ -136,7 +138,7 @@ is a logic error, as `tonumber` returns `nil` on error, and will cause unexpecte
 
 If you need behavior like this, look at [`Spacer`](#spacer).
 
-Look inside the source of `strontium.lua` for some good examples.
+Look inside the source of [`strontium.lua`](../strontium.lua) for some good examples.
 
 # Reference
 
@@ -286,27 +288,6 @@ Look inside the source of `strontium.lua` for some good examples.
 > `function(pat: string): Rule`
 > 
 > Creates a [`Rule`](#rule) that matches a specific pattern, returning any captures.
-
-## `Forward`
-> A "forward declaration" of a [`Rule`](#rule).
-> Set the [`Field.definition`](#forwarddefinition) field when you're ready to define the rule.
-### Fields
-#### `Forward.definition`
-> `Rule?`
->
-> The rule to forward any method calls to.
-### Methods
-#### `Forward.new`
-> `function(): Forward`
->
-> Creates a new forward declaration.
-### Metamethods
-#### `Forward:__index`
-> `function(self: Forward, key: any): any`
->
-> An index of `def` returns the inner [`Forward.definition`](#forwarddefinition)'s [`def`](#ruledef) field. Otherwise, this acts like normal.
->
-> **Your program will crash if you try to use a forward-declared rule without setting the [`definition`](#forwarddefinition) field.**
 
 ---
 

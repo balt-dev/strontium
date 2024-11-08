@@ -1,6 +1,6 @@
 rockspec_format = "3.0"
 package = "strontium"
-version = "1.0-2"
+version = "1.1-0"
 source = {
    url = "git://github.com/balt-dev/strontium",
 }

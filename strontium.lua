@@ -24,7 +24,6 @@ local unpack = table.unpack or unpack
 --- @field Rule Rule
 --- @field Spacer Rule
 --- @field Error Error
---- @field Forward Forward
 --- @field Literal fun(lit: string): Rule
 --- @field Pattern fun(pat: string): Rule
 local T = {}
@@ -344,46 +343,12 @@ setmetatable(T.Rule, {
     __newindex = function() error("cannot create fields on type Rule") end
 })
 
---- @class Forward: Rule
---- @field definition Rule?
---- @field private __metatable boolean
---- A facility for creating a forward declaration of a [`Rule`](lua://strontium.Rule).
---- Using a forward declaration before it's declared will cause an error!
-T.Forward = { __metatable = false }
-
---- @return Forward
---- Creates a new forward declaration.
---- You can complete this by setting the `definition` field.
-T.Forward.new = function()
-    local o = {}
-    setmetatable(o, T.Forward)
-    return o
-end
-
-T.Forward.__index = function(t, k)
-    if k == "def" then
-        local def = t["definition"]
-        if not def then
-            error("rule forward declaration incomplete", 2)
-        end
-        return def.def
-    end
-    local rule_field = T.Rule[k]
-    if rule_field then return rule_field end
-    return T.Forward[k]
-end
-
-setmetatable(T.Forward, {
-    __metatable = false,
-    __newindex = function() error("cannot create fields on type Forward") end
-})
-
 --- @return Rule A rule that matches the literal string
 --- @param literal string The string to match
 --- Matches a literal string.
 function T.Literal(literal)
     return T.Rule.new(function(source, index)
-        if #literal == 0 then return index, "" end    
+        if #literal == 0 then return index, "" end
         if source:sub(index, index + #literal - 1) == literal then
             return index + #literal, literal
         end
