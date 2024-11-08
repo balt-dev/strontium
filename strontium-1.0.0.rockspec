@@ -1,7 +1,8 @@
 package = "strontium"
 version = "1.0.0"
 source = {
-   url = "git+ssh://git@github.com/balt-dev/strontium.git"
+   url = "git://github.com/balt-dev/strontium",
+   tag = "v1.0.0"
 }
 description = {
    homepage = "https://github.com/balt-dev/strontium",
@@ -18,5 +19,6 @@ build = {
    type = "none",
    install = {lua = {
       ["strontium"] = "strontium.lua"
-   }}
+   }},
+   copy_directories = { "doc" }
 }
