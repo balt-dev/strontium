@@ -3,7 +3,7 @@
 # Table of Contents
 - [Overview](#overview)
   - [A quick example](#a-quick-example)
-  - [Basic syntax and operands](#basic-syntax-and-operands)
+  - [Basic syntax and operators](#basic-syntax-and-operators)
   - [Pattern matching](#pattern-matching)
   - [Implementing Rule yourself](#implementing-rule-yourself)
 - [Reference](#reference)
@@ -87,12 +87,12 @@ local expr = sum .. p"$":err("expected EOF")
 ```
 Everything done here is explained below.
 
-## Basic syntax and operands
+## Basic syntax and operators
 
 You can define a rule that matches a literal string by
-prefixing it with `strontium.Literal` - or, for brevity, shortening it to something like `l` like above. A literal string rule will return one result, being the string verbatim.
+prefixing it with [`strontium.Literal`](#literal) - or, for brevity, shortening it to something like `l` like above. A literal string rule will return one result, being the string verbatim.
 
-Rules support the following operands:
+Rules support the following operators:
 - [`a + b`](#rule__add): Given two rules, parse the left, then parse the right, and return the right rule's result
 - [`a - b`](#rule__sub): Ditto, but return the left rule's result
 - [`a * b`](#rule__mul): Parses the left rule, discards its result, then parses the right rule at the same index (equivalent to a positive lookahead)
@@ -103,21 +103,16 @@ Rules support the following operands:
 ## Pattern matching
 
 You can define a rule that matches a Lua pattern using
-`strontium.Pattern` - or again, shortening it to `p` in
+[`strontium.Pattern`](#pattern) - or again, shortening it to `p` in
 the above snippet for brevity.
 
 Rules defined in this way will return any _captures_ defined within the pattern -
 meaning that a rule with no captures will return nothing!
+
 This is useful in conjunction with things like `%b()`, or even [`Rule:map`](#rule-map).
 
 For example, parsing `6E` with `p'(%d)([ABCDEF])'`
-would return `6      E` - that is, two separate values returned in an unpacked "tuple".
-
----
-
-### Sidenote
-
-Now would be a good time to scroll ahead and look at the reference entry for [`Rule`](#rule). After that, come back and look at the following section.
+would return `6 E` - that is, two separate values returned in an unpacked "tuple".
 
 ## Implementing Rule yourself
 
@@ -146,6 +141,7 @@ Look inside the source of `strontium.lua` for some good examples.
 # Reference
 
 ## `Rule`
+> A single rule of a grammar.
 ### Fields
 #### `Rule.def`
 > `fun(string, number): number`
@@ -177,15 +173,6 @@ Look inside the source of `strontium.lua` for some good examples.
 >
 > Only use this if you're writing a rule where the only pattern is ignored.
 
-#### `Rule:discard`
-> `function(self: Rule): Rule`
->
-> Discards the output of a rule.
->
-> Use of this function is generally discouraged, in favor of [`+`](#rule__add) and [`-`](#rule__sub), for performance and brevity.
->
-> Only use this if you're writing a rule where the only pattern is ignored.
-
 #### `Rule:err`
 > `function(self: Rule, message: string): Rule`
 >
@@ -200,9 +187,10 @@ Look inside the source of `strontium.lua` for some good examples.
 > `function(self: Rule, max: number?): Rule`
 >
 > Attempts to match a rule as many times as possible, returning the returned values.
+> 
 > If at any point the rule does not advance in the string (i.e. matching the empty string),
 > and there is no maximum match amount set,
-> an error is immediately thrown to prevent an infinite loop.
+> ** an error is immediately thrown** to prevent an infinite loop.
 
 #### `Rule:map`
 > `function(self: Rule, fn: fun(...): ...): Rule`
@@ -259,12 +247,18 @@ Look inside the source of `strontium.lua` for some good examples.
 > Parses the left and right rule, returning the results of both.
 
 ## `Error`
+> An error that can be raised from parsing.
+>
+> Note that in Lua 5.1, the error message won't actually display
+> without calling `tostring` on the actual error first.
 ### Fields
 #### `Error.index`
 > `number`
+>
 > The index at which the error occurred.
 #### `Error.err`
 > `any`
+>
 > The error message that the error displays.
 ### Methods
 #### `Error.new`
@@ -292,8 +286,31 @@ Look inside the source of `strontium.lua` for some good examples.
 > 
 > Creates a [`Rule`](#rule) that matches a specific pattern, returning any captures.
 
+## `Forward`
+> A "forward declaration" of a [`Rule`](#rule).
+> Set the [`Field.definition`](#forwarddefinition) field when you're ready to define the rule.
+### Fields
+#### `Forward.definition`
+> `Rule?`
+>
+> The rule to forward any method calls to.
+### Methods
+#### `Forward.new`
+> `function(): Forward`
+>
+> Creates a new forward declaration.
+### Metamethods
+#### `Forward:__index`
+> `function(self: Forward, key: any): any`
+>
+> An index of `def` returns the inner [`Forward.definition`](#forwarddefinition)'s [`def`](#ruledef) field. Otherwise, this acts like normal.
+>
+> **Your program will crash if you try to use a forward-declared rule without setting the [`definition`](#forwarddefinition) field.**
+
 ---
 
-_this was all hand-typed because `luals` doesn't output very good documentation, might make a pr to make this format automatic as it took me over 3 hours to type all this out_
+_this was all hand-typed because `luals` doesn't output very good documentation._
+
+_might make a pr to make this format automatic (it's just markdown) as it took me over 3 hours to type all this out and keeping track of the same thing in two places really, really sucks_
 
 _copyright @baltdev 2024_
