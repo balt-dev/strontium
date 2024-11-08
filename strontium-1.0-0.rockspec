@@ -26,9 +26,7 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
-      strontium = {
-         sources = {"strontium.lua"}
-      }
+      strontium = "strontium.lua"
    },
    copy_directories = { "doc" }
 }
