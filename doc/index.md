@@ -270,10 +270,9 @@ Look inside the source of `strontium.lua` for some good examples.
 > `function(self: Error): string`
 
 ## `Spacer`
-> `Rule`
+> `{}`
 > 
 > A spacer value, for use when using `nil` would be a logic error.
-> Usable as a rule, consuming nothing and returning nothing.
 > Notable for its use in [`Rule:optional`](#ruleoptional).
 #### `Spacer:__tostring`
 > `function(self: Spacer): string`

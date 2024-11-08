@@ -30,15 +30,10 @@ local unpack = table.unpack or unpack
 local T = {}
 
 --- A spacer value, for use when using `nil` would be a logic error.
---- @type Rule
 --- @diagnostic disable-next-line: missing-fields
-T.Spacer = { __metatable = false }
+T.Spacer = {}
 setmetatable(T.Spacer, {
     __metatable = false,
-    __index = function (t, k)
-        if k == "def" then return function(_, i) return i, T.Spacer end end
-        return T.Rule[k]
-    end,
     __newindex = function() error("cannot set fields on Spacer", 2) end,
     __tostring = function () return "{strontium.Spacer}" end
 })
