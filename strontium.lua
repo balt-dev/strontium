@@ -1,3 +1,19 @@
+--[[
+
+Dead simple, one file parsing library for Lua.
+Made by @baltdev. Copyright 2024.
+Licensed under the MIT license.
+See https://github.com/balt-dev/strontium.
+
+See the documentation here:
+https://github.com/balt-dev/strontium/tree/v1.0.0/doc/index.md
+
+Feel free to copy this file around as much as you want,
+as long as this comment at the top stays untouched.
+
+]]
+
+
 -- shim
 ---@diagnostic disable: deprecated
 local unpack = table.unpack or unpack
