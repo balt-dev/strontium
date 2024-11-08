@@ -1,6 +1,6 @@
 # `strontium`
 
-A simple BNF parsing framework for Lua. Write your rules in Lua!
+A dead-simple BNF parsing framework for Lua. Supports Lua 5.*, including LuaJIT. Write your rules in Lua!
 
 Comprehensive documentation can be found in [`doc/index.md`](doc/index.md).
 
