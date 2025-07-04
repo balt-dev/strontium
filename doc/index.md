@@ -192,7 +192,7 @@ Look inside the source of [`strontium.lua`](../strontium.lua) for some good exam
 > 
 > If at any point the rule does not advance in the string (i.e. matching the empty string),
 > and there is no maximum match amount set,
-> ** an error is immediately thrown** to prevent an infinite loop.
+> **an error is immediately thrown** to prevent an infinite loop.
 
 #### `Rule:map`
 > `function(self: Rule, fn: fun(...): ...): Rule`
