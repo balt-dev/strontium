@@ -293,6 +293,4 @@ Look inside the source of [`strontium.lua`](../strontium.lua) for some good exam
 
 _this was all hand-typed because `luals` doesn't output very good documentation._
 
-_might make a pr to make this format automatic (it's just markdown) as it took me over 3 hours to type all this out and keeping track of the same thing in two places really, really sucks_
-
 _copyright @baltdev 2024_
